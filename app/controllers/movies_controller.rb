@@ -16,6 +16,21 @@ class MoviesController < ApplicationController
     else
        @movies = Movie.all
     end
+    # retrieve a new list of ratings
+    @all_ratings = self.ratings
+    # if rating boxes are checked get the list of checked ratings
+    if params[:commit] == "Refresh" and params[:ratings]
+       @applicable_ratings = params[:ratings].keys
+
+       new_movie_list = Array.new
+       @movies.each do |movie|
+          # filter movies
+          if (@applicable_ratings.include? movie[:rating])
+             new_movie_list.push movie
+          end
+       end
+       @movies = new_movie_list
+    end
   end
 
   def new
@@ -45,5 +60,14 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
-
+  
+  def ratings
+    ratings = Array.new
+    movies = Movie.all
+    movies.each do |movie|
+       ratings.push movie[:rating]
+       ratings.uniq!
+    end
+    return ratings
+  end
 end

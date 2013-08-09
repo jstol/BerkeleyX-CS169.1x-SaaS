@@ -7,20 +7,35 @@ class MoviesController < ApplicationController
   end
 
   def index
+    # form_tag workarounds
+    params[:utf8] = nil
+    params[:commit] = nil
+
     if params[:orderBy]=="movie"
-       @movies = Movie.find(:all, :order=>"title ASC")
-       @highlighted="movie"
+       session[:orderBy] = "movie"
     elsif params[:orderBy]=="release_date"
+       session[:orderBy] = "release_date"
+    end
+    
+    if session[:orderBy]=="movie"
+       @movies = Movie.find(:all, :order=>"title ASC")
+       @highlighted="movie"   
+    elsif session[:orderBy]=="release_date"
        @movies = Movie.find(:all, :order=>"release_date ASC")
        @highlighted="date"
     else
        @movies = Movie.all
     end
+    # update the params hash (for redirection later)
+    params[:orderBy] = session[:orderBy]
+
     # retrieve a new list of ratings
     @all_ratings = self.ratings
     # if rating boxes are checked get the list of checked ratings
-    if params[:commit] == "Refresh" and params[:ratings]
-       @applicable_ratings = params[:ratings].keys
+    session[:ratings] = params[:ratings] if !params[:ratings].nil?
+    params[:ratings] = session[:ratings]
+    if session[:ratings]
+       @applicable_ratings = session[:ratings].keys
 
        new_movie_list = Array.new
        @movies.each do |movie|
@@ -30,6 +45,10 @@ class MoviesController < ApplicationController
           end
        end
        @movies = new_movie_list
+    end
+    if (movies_path(params) != session[:url])
+       session[:url] = movies_path(params)
+       redirect_to movies_path(params)
     end
   end
 

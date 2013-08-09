@@ -7,33 +7,29 @@ class MoviesController < ApplicationController
   end
 
   def index
-    # form_tag workarounds
-    params[:utf8] = nil
-    params[:commit] = nil
-
-    if params[:orderBy]=="movie"
-       session[:orderBy] = "movie"
-    elsif params[:orderBy]=="release_date"
-       session[:orderBy] = "release_date"
+    initial_path = movies_path(params)
+    if params[:order_by]=="movie"
+       session[:order_by] = "movie"
+    elsif params[:order_by]=="release_date"
+       session[:order_by] = "release_date"
     end
     
-    if session[:orderBy]=="movie"
+    if session[:order_by]=="movie"
        @movies = Movie.find(:all, :order=>"title ASC")
        @highlighted="movie"   
-    elsif session[:orderBy]=="release_date"
+    elsif session[:order_by]=="release_date"
        @movies = Movie.find(:all, :order=>"release_date ASC")
        @highlighted="date"
     else
        @movies = Movie.all
     end
     # update the params hash (for redirection later)
-    params[:orderBy] = session[:orderBy]
+    params[:order_by] = session[:order_by]
 
     # retrieve a new list of ratings
     @all_ratings = self.ratings
     # if rating boxes are checked get the list of checked ratings
     session[:ratings] = params[:ratings] if !params[:ratings].nil?
-    params[:ratings] = session[:ratings]
     if session[:ratings]
        @applicable_ratings = session[:ratings].keys
 
@@ -46,9 +42,21 @@ class MoviesController < ApplicationController
        end
        @movies = new_movie_list
     end
-    if (movies_path(params) != session[:url])
+    # Only fill the params with ratings if not all are selected. Otherwise leave out
+    if (params[:ratings] == nil and session[:ratings] == nil) or (@all_ratings == @applicable_ratings)
+       params[:ratings] = nil
+    else
+       params[:ratings] = session[:ratings]
+    end
+    # form_tag workarounds
+    params[:utf8] = nil
+    params[:commit] = nil
+
+    if ((movies_path(params) != initial_path) and (movies_path(params) != session[:url]))
        session[:url] = movies_path(params)
        redirect_to movies_path(params)
+    else
+       session[:url] = nil
     end
   end
 

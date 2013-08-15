@@ -32,4 +32,6 @@ Scenario: no ratings selected
   # see assignment
 
 Scenario: all ratings selected
-  # see assignment
+  Given I check the following ratings: G,PG,PG-13,R
+  When I press "Refresh"
+  Then I should see all of the movies

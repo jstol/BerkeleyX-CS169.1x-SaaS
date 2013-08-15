@@ -39,6 +39,21 @@ When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
   end
 end
 
+Then /^I should( not)? see the movies: (.*)$/ do |should_not_see, movies|
+	movies = movies.split(',')
+	if should_not_see
+		movies.each do |movie|
+			movie = movie.strip
+			step %{I should not see "#{movie}"}
+		end
+	else
+		movies.each do |movie|
+			movie = movie.strip
+			step %{I should see "#{movie}"}
+		end
+	end
+end
+
 Then /^I should see all of the movies$/ do
   Movie.all.each do |movie|
     step %{I should see "#{movie.title}"}

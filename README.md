@@ -1,8 +1,8 @@
-CS 169.1x SaaS Homework
+BerkeleyX: CS 169.1x SaaS Homework
 ==================
 
 This repository contains the homework assignments completed for __BerkeleyX: CS-169.1x Software as a Service__, a MOOC (Massive open online course) offered on https://www.edx.org/.
-I completed this course in the summer of 2013.
+I completed this course in the summer of 2013 in my free time.
 
 The course lasted just over 5 weeks and included video lectures, auto-graded homework assignments, and quizzes.
 

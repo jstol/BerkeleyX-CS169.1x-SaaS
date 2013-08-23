@@ -14,3 +14,6 @@ More info at https://courses.edx.org/courses/BerkeleyX/CS-169.1x/2013_Summer/
 
 ### Homework 3: Behavior-Driven Design ###
 > In this homework you will create user stories to describe a feature of a SaaS app, use the Cucumber tool to turn those stories into executable acceptance tests, and run the tests against your SaaS app. Specifically, you will write Cucumber scenarios that test the happy paths of parts 1-3 of HW 2.
+
+### Homework 4: BDD and TDD Cycle ###
+> In this homework you will use the Cucumber and RSpec tools to add new functionality to a SaaS app. This functionality will be designed following the principles of Behavior-Driven Design (BDD) and developed following Test-Driven Development (TDD).
